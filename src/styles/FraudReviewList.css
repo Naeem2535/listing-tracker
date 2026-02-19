@@ -1,0 +1,334 @@
+/* ============================================
+   Fraud Review List - Admin Module
+   Pakistan Property - AI Fraud Tracker
+   ============================================ */
+
+/* ---- Page layout ---- */
+.fraud-review-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  padding: 1.5rem 0 2rem;
+}
+
+.fraud-review-page__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ---- Header card ---- */
+.fraud-review-header {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.fraud-review-header__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1d21;
+  margin: 0 0 0.25rem 0;
+}
+
+.fraud-review-header__subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ---- Toolbar: search + filter ---- */
+.fraud-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.fraud-toolbar__search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+}
+
+.fraud-toolbar__search .form-control {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.fraud-toolbar__search .form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.fraud-toolbar__filter {
+  min-width: 180px;
+}
+
+.fraud-toolbar__filter .form-select {
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.fraud-toolbar__filter .form-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* ---- Main content card ---- */
+.fraud-content-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 0;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+/* ---- Table ---- */
+.fraud-table-wrapper {
+  margin: 0;
+}
+
+.fraud-table {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.fraud-table__head {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: 0.75rem;
+}
+
+.fraud-table__head th {
+  border-bottom: 2px solid #e2e8f0;
+  padding: 0.85rem 1rem;
+  white-space: nowrap;
+}
+
+.fraud-table__body tr {
+  transition: background-color 0.15s ease;
+}
+
+.fraud-table__body tr:hover {
+  background-color: #f8fafc;
+}
+
+.fraud-table__row td {
+  padding: 0.85rem 1rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.fraud-table__id {
+  font-weight: 600;
+  color: #334155;
+}
+
+.fraud-table__title {
+  max-width: 280px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.fraud-table__price {
+  font-weight: 600;
+  color: #0f766e;
+}
+
+.fraud-table__status {
+  text-transform: capitalize;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* ---- Fraud score badge ---- */
+.fraud-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.fraud-badge--green {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.fraud-badge--orange {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.fraud-badge--red {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ---- Action buttons ---- */
+.fraud-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: flex-end;
+}
+
+.fraud-actions__btn {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.fraud-actions__btn:active {
+  transform: scale(0.98);
+}
+
+.fraud-actions__btn--view {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.fraud-actions__btn--view:hover {
+  background: #c7d2fe;
+}
+
+.fraud-actions__btn--approve {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.fraud-actions__btn--approve:hover {
+  background: #a7f3d0;
+}
+
+.fraud-actions__btn--block {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.fraud-actions__btn--block:hover {
+  background: #fecaca;
+}
+
+/* ---- Empty state ---- */
+.fraud-table-empty {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* ---- Pagination ---- */
+.fraud-pagination-wrap {
+  padding: 1rem 1.25rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.fraud-pagination-info {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.fraud-pagination .pagination {
+  margin: 0;
+  gap: 0.25rem;
+}
+
+.fraud-pagination .page-link {
+  border-radius: 6px !important;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.fraud-pagination .page-link:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.fraud-pagination .page-item.active .page-link {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 992px) {
+  .fraud-table__title {
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .fraud-review-page {
+    padding: 1rem 0;
+  }
+
+  .fraud-review-header {
+    padding: 1.25rem 1rem;
+  }
+
+  .fraud-review-header__title {
+    font-size: 1.25rem;
+  }
+
+  .fraud-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fraud-toolbar__search {
+    max-width: none;
+  }
+
+  .fraud-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fraud-table {
+    font-size: 0.85rem;
+  }
+
+  .fraud-table__head th,
+  .fraud-table__row td {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .fraud-actions {
+    justify-content: flex-start;
+  }
+
+  .fraud-pagination-wrap {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+}
