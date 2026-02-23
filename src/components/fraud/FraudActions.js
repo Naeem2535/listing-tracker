@@ -22,7 +22,7 @@ function FraudActions({ listingId, onView, onApprove, onBlock }) {
     <div className="fraud-actions">
       <button
         type="button"
-        className="fraud-actions__btn fraud-actions__btn--view"
+        className="fraud-actions__btn fraud-actions__btn--view" 
         onClick={handleView}
         title="View details"
       >

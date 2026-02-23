@@ -1,3 +1,54 @@
 .App {
   min-height: 100vh;
 }
+
+.app-nav {
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0.75rem 0;
+}
+
+.app-nav__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.app-nav__brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #1a1d21;
+}
+
+.app-nav__links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.app-nav__link {
+  padding: 0.5rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #4b5563;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.app-nav__link:hover {
+  color: #1a1d21;
+  background: #f3f4f6;
+}
+
+.app-nav__link--active {
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.app-main {
+  flex: 1;
+}
