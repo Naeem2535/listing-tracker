@@ -25,15 +25,21 @@ export async function submitListing(payload) {
 
 /**
  * Fetch all listings with AI status and fraud info.
- * GET /api/listings
+ * GET /api/listings or GET /api/listings?status=approved|blocked|pending_ai_review|limited_visibility
+ * @param {string} [status] - Optional filter by ai_status
+ * @returns {Promise<{ data: Array, count: number }>}
  */
-export async function getListings() {
+export async function getListings(status = null) {
+  const params = status ? { status } : {};
   const res = await axios.get(`${API_BASE}/api/listings`, {
+    params,
     headers: { Accept: 'application/json' },
     timeout: 15000,
   });
   const body = res.data;
-  if (Array.isArray(body)) return body;
-  const list = body?.data ?? body?.listings ?? body?.list ?? [];
-  return Array.isArray(list) ? list : [];
+  if (Array.isArray(body)) return { data: body, count: body.length };
+  const data = body?.data ?? body?.listings ?? body?.list ?? [];
+  const list = Array.isArray(data) ? data : [];
+  const count = body?.count ?? list.length;
+  return { data: list, count };
 }

@@ -17,9 +17,10 @@ function ListingList() {
       setLoading(true);
       setError(null);
       try {
-        const data = await getListings();
+        const result = await getListings();
         if (!cancelled) {
-          setListings(Array.isArray(data) ? data : []);
+          const list = result?.data ?? result;
+          setListings(Array.isArray(list) ? list : []);
         }
       } catch (err) {
         if (!cancelled) {

@@ -1,0 +1,330 @@
+/* AI Fraud Review Dashboard - Pakistan Property */
+
+.fraud-dashboard-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  padding: 1.5rem 0 2rem;
+}
+
+.fraud-dashboard-page__inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.fraud-dashboard-page__header {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.fraud-dashboard-page__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1d21;
+  margin: 0 0 0.25rem 0;
+}
+
+.fraud-dashboard-page__subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Dashboard container */
+.fraud-dashboard {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem 1.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.fraud-dashboard--error .fraud-dashboard__error {
+  color: #dc2626;
+  margin: 0;
+}
+
+/* Stats cards */
+.fraud-stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.fraud-stats-card {
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.fraud-stats-card__label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 0.35rem;
+}
+
+.fraud-stats-card__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.fraud-stats-card--total {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.fraud-stats-card--approved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.fraud-stats-card--pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.fraud-stats-card--limited {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.fraud-stats-card--blocked {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Filter bar */
+.fraud-filter-bar {
+  margin-bottom: 1.25rem;
+}
+
+.fraud-filter-bar__label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.35rem;
+}
+
+.fraud-filter-bar__select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9375rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  min-width: 200px;
+}
+
+.fraud-filter-bar__select:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* Table */
+.fraud-dashboard__loading {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+.fraud-table-wrap {
+  overflow-x: auto;
+}
+
+.fraud-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.fraud-table th,
+.fraud-table td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.fraud-table th {
+  font-weight: 600;
+  color: #374151;
+  background: #f9fafb;
+}
+
+.fraud-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.fraud-table-score {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.fraud-table-score--green {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.fraud-table-score--orange {
+  background: #ffedd5;
+  color: #9a3412;
+}
+
+.fraud-table-score--red {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.fraud-table-score--gray {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.fraud-table__view-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #2563eb;
+  background: #eff6ff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.fraud-table__view-btn:hover {
+  background: #dbeafe;
+}
+
+.fraud-table-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #6b7280;
+}
+
+/* AI Status badges in table (reuse) */
+.fraud-table .ai-status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+}
+
+.fraud-table .ai-status-badge--green { background: #d1fae5; color: #065f46; }
+.fraud-table .ai-status-badge--yellow { background: #fef3c7; color: #92400e; }
+.fraud-table .ai-status-badge--orange { background: #ffedd5; color: #9a3412; }
+.fraud-table .ai-status-badge--red { background: #fee2e2; color: #991b1b; }
+.fraud-table .ai-status-badge--gray { background: #f3f4f6; color: #4b5563; }
+
+/* Modal */
+.fraud-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.fraud-modal {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  max-width: 480px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fraud-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.fraud-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #1a1d21;
+}
+
+.fraud-modal__close {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.fraud-modal__close:hover {
+  background: #f3f4f6;
+  color: #1a1d21;
+}
+
+.fraud-modal__body {
+  padding: 1.25rem 1.5rem;
+}
+
+.fraud-modal__row {
+  margin: 0 0 1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.fraud-modal__row--block {
+  flex-direction: column;
+}
+
+.fraud-modal__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  min-width: 100px;
+}
+
+.fraud-modal__value {
+  font-size: 0.9375rem;
+  color: #1a1d21;
+}
+
+.fraud-modal__risks {
+  margin: 0.25rem 0 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.fraud-modal__no-issues {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.fraud-modal .ai-status-badge {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8125rem;
+}
