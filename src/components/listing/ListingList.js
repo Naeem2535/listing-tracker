@@ -1,53 +1,51 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ListingCard from './ListingCard';
-import { getListings } from '../../api/listingsApi';
+import { getAdminPropertiesPost } from '../../api/listingsApi';
+
+const PER_PAGE = 15;
 
 /**
- * ListingList module: fetch and display all listings with AI status and fraud info.
+ * ListingList: pagination + params (property_type_id=1, city_code=PP016) + response display.
  */
 function ListingList() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [response, setResponse] = useState(null);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchListings() {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await getListings();
-        if (!cancelled) {
-          const list = result?.data ?? result;
-          setListings(Array.isArray(list) ? list : []);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          const message =
-            err.response?.data?.message ||
-            err.response?.data?.error ||
-            err.message ||
-            'Failed to load listings.';
-          setError(message);
-          setListings([]);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+  const fetchListings = useCallback(async (page = 1) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await getAdminPropertiesPost({
+        current_page: page,
+        per_page: PER_PAGE,
+        property_type_id: 1,
+        city_code: 'PP016',
+      });
+      setListings(Array.isArray(result?.data) ? result.data : []);
+      setResponse(result);
+    } catch (err) {
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        'Failed to load listings.';
+      setError(message);
+      setListings([]);
+      setResponse(null);
+    } finally {
+      setLoading(false);
     }
-
-    fetchListings();
-    return () => { cancelled = true; };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="listing-list listing-list--loading">
-        <p>Loading listings...</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    fetchListings(currentPage);
+  }, [currentPage, fetchListings]);
+
+  const lastPage = response?.last_page ?? 1;
+  const total = response?.count ?? response?.total ?? 0;
 
   if (error) {
     return (
@@ -60,7 +58,9 @@ function ListingList() {
   return (
     <div className="listing-list">
       <div className="listing-list__grid">
-        {listings.length === 0 ? (
+        {loading ? (
+          <p className="listing-list__empty">Loading...</p>
+        ) : listings.length === 0 ? (
           <p className="listing-list__empty">No listings found.</p>
         ) : (
           listings.map((listing) => (
@@ -68,6 +68,44 @@ function ListingList() {
           ))
         )}
       </div>
+
+      {response && (
+        <>
+          <nav className="listing-list__pagination" aria-label="Listings pagination">
+            <button
+              type="button"
+              className="listing-list__page-btn"
+              disabled={currentPage <= 1 || loading}
+              onClick={() => setCurrentPage((p) => p - 1)}
+            >
+              Previous
+            </button>
+            <span className="listing-list__page-info">
+              Page {currentPage} of {lastPage}
+            </span>
+            <button
+              type="button"
+              className="listing-list__page-btn"
+              disabled={currentPage >= lastPage || loading}
+              onClick={() => setCurrentPage((p) => p + 1)}
+            >
+              Next
+            </button>
+          </nav>
+
+          <div className="listing-list__response">
+            <p className="listing-list__api-hint">
+              {listings.length} on this page · {total} total from API.
+            </p>
+            <details className="listing-list__response-details">
+              <summary>Response</summary>
+              <pre className="listing-list__response-json">
+                {JSON.stringify(response.response || response, null, 2)}
+              </pre>
+            </details>
+          </div>
+        </>
+      )}
     </div>
   );
 }

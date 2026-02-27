@@ -1,6 +1,7 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import FraudTable from '../../components/fraud/FraudTable';
 import { getFraudReviewListings } from '../../api/fraudApi';
+import { approveListing, blockListing } from '../../api/listingsApi';
 import '../../styles/FraudReviewList.css';
 
 const PAGE_SIZE = 5;
@@ -17,13 +18,20 @@ function FraudReviewList() {
   const [search, setSearch] = useState('');
   const [scoreFilter, setScoreFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [processingId, setProcessingId] = useState(null);
+  const [actionMessage, setActionMessage] = useState({ type: '', text: '' });
 
-  useEffect(() => {
+  const fetchListings = useCallback(() => {
+    setLoading(true);
     getFraudReviewListings()
       .then((res) => setListings(res.data || []))
       .catch(() => setListings([]))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    fetchListings();
+  }, [fetchListings]);
 
   const filteredListings = useMemo(() => {
     let result = [...listings];
@@ -54,8 +62,36 @@ function FraudReviewList() {
   }, [filteredListings, currentPage]);
 
   const handleView = (id) => console.log('View', id);
-  const handleApprove = (id) => console.log('Approve', id);
-  const handleBlock = (id) => console.log('Block', id);
+
+  const handleApprove = async (id) => {
+    setActionMessage({ type: '', text: '' });
+    setProcessingId(id);
+    try {
+      await approveListing(id);
+      setActionMessage({ type: 'success', text: 'Listing approved.' });
+      fetchListings();
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Failed to approve.';
+      setActionMessage({ type: 'error', text: msg });
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleBlock = async (id) => {
+    setActionMessage({ type: '', text: '' });
+    setProcessingId(id);
+    try {
+      await blockListing(id);
+      setActionMessage({ type: 'success', text: 'Listing blocked.' });
+      fetchListings();
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || 'Failed to block.';
+      setActionMessage({ type: 'error', text: msg });
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   const from = (currentPage - 1) * PAGE_SIZE + 1;
   const to = Math.min(currentPage * PAGE_SIZE, filteredListings.length);
@@ -70,6 +106,14 @@ function FraudReviewList() {
           </p>
         </header>
 
+        {actionMessage.text && (
+          <div
+            className={`fraud-review-message fraud-review-message--${actionMessage.type}`}
+            role="alert"
+          >
+            {actionMessage.text}
+          </div>
+        )}
         <div className="fraud-toolbar">
           <div className="fraud-toolbar__search">
             <input
@@ -115,6 +159,7 @@ function FraudReviewList() {
                 onView={handleView}
                 onApprove={handleApprove}
                 onBlock={handleBlock}
+                processingId={processingId}
               />
               <div className="fraud-pagination-wrap">
                 <p className="fraud-pagination-info">

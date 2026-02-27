@@ -66,6 +66,68 @@
   margin: 0;
 }
 
+.listing-list__api-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.listing-list__pagination {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.listing-list__page-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.listing-list__page-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+}
+
+.listing-list__page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.listing-list__page-info {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.listing-list__response {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.listing-list__response-details summary {
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.listing-list__response-json {
+  margin: 0.75rem 0 0 0;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  overflow-x: auto;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
 /* ListingCard */
 .listing-card {
   background: #fff;

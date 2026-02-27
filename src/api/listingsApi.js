@@ -12,8 +12,8 @@ const PROPERTIES_API_BASE =
   process.env.NODE_ENV === 'development'
     ? ''
     : (process.env.REACT_APP_PROPERTIES_API_URL || 'https://admin.pakistanproperty.com');
-// Admin backend par list/fetch ke liye GET route (configurable – backend jo support kare)
-const PROPERTIES_LIST_ENDPOINT = process.env.REACT_APP_PROPERTIES_LIST_ENDPOINT || '/api/properties/list';
+// Admin backend: user properties list – POST /api/properties (Laravel properties() method)
+const PROPERTIES_POST_URL = (PROPERTIES_API_BASE || '') + '/api/properties';
 
 /** Normalize item: backend may send property_title/fraud_status etc., we use title/ai_status in UI */
 function normalizeProperty(item) {
@@ -63,28 +63,87 @@ export async function getListings(status = null) {
 }
 
 /**
- * Fetch properties/listings from LIVE admin API.
- * Route .env se: REACT_APP_PROPERTIES_LIST_ENDPOINT (default: /api/properties/list)
- * @param {string} [status] - Optional filter (if API supports ?status=)
- * @returns {Promise<{ data: Array, count: number }>}
+ * Approve a listing (Fraud Review). PATCH /api/listings/:id
  */
-export async function getProperties(status = null) {
-  const params = status ? { status } : {};
-  const path = PROPERTIES_LIST_ENDPOINT.startsWith('/') ? PROPERTIES_LIST_ENDPOINT : `/${PROPERTIES_LIST_ENDPOINT}`;
-  const url = PROPERTIES_API_BASE ? `${PROPERTIES_API_BASE}${path}` : path;
-  const res = await axios.get(url, {
-    params,
-    headers: { Accept: 'application/json' },
-    timeout: 20000,
+export async function approveListing(id) {
+  const res = await axios.patch(`${API_BASE}/api/listings/${id}`, { ai_status: 'approved' }, {
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    timeout: 15000,
   });
-  const body = res.data;
-  let list;
-  if (Array.isArray(body)) {
-    list = body.map(normalizeProperty);
-  } else {
-    const raw = body?.data ?? body?.properties ?? body?.listings ?? body?.list ?? [];
-    list = Array.isArray(raw) ? raw.map(normalizeProperty) : [];
+  return res.data;
+}
+
+/**
+ * Block a listing (Fraud Review). PATCH /api/listings/:id
+ */
+export async function blockListing(id) {
+  const res = await axios.patch(`${API_BASE}/api/listings/${id}`, { ai_status: 'blocked' }, {
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    timeout: 15000,
+  });
+  return res.data;
+}
+
+/**
+ * Fetch user properties from admin – GET ya POST /api/properties.
+ * property_type_id=1 & city_code=PP016 (query/body dono mein bhejte hain).
+ * Pehle GET try (query params), phir same params POST se (agar backend POST expect kare).
+ */
+export async function getAdminPropertiesPost(params = {}) {
+  const query = {
+    current_page: params.current_page ?? params.page ?? 1,
+    per_page: params.per_page ?? 15,
+    status: 'active',
+    property_type_id: params.property_type_id ?? 1,
+    sub_category_id: params.sub_category_id ?? '',
+    category_id: params.category_id ?? '',
+    trend: params.trend ?? false,
+    new_properties: params.new_properties ?? false,
+    ...(params.city_code && { city_code: params.city_code }),
+    ...(params.agency_name && { agency_name: params.agency_name }),
+    ...(params.location_id && { location_id: params.location_id }),
+    ...(params.min_price != null && { min_price: params.min_price }),
+    ...(params.max_price != null && { max_price: params.max_price }),
+    ...(params.area_min != null && { area_min: params.area_min }),
+    ...(params.area_max != null && { area_max: params.area_max }),
+  };
+
+  let resBody;
+  try {
+    const res = await axios.get(PROPERTIES_POST_URL, {
+      params: query,
+      headers: { Accept: 'application/json' },
+      timeout: 20000,
+    });
+    resBody = res.data;
+  } catch (getErr) {
+    if (getErr.response?.status === 405 || getErr.response?.status === 404) {
+      const res = await axios.post(PROPERTIES_POST_URL, query, {
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        timeout: 20000,
+      });
+      resBody = res.data;
+    } else {
+      throw getErr;
+    }
   }
-  const count = body?.count ?? list.length;
-  return { data: list, count };
+
+  let raw = resBody?.data ?? resBody?.properties ?? resBody?.listings ?? resBody?.list;
+  if (!Array.isArray(raw) && raw && typeof raw === 'object' && Array.isArray(raw.data))
+    raw = raw.data;
+  if (!Array.isArray(raw)) raw = Array.isArray(resBody) ? resBody : [];
+  const list = Array.isArray(raw) ? raw.map(normalizeProperty) : [];
+  const total = resBody?.total ?? resBody?.count ?? list.length;
+  const current_page = resBody?.current_page ?? 1;
+  const last_page = resBody?.last_page ?? 1;
+  const per_page = resBody?.per_page ?? query.per_page;
+  return {
+    data: list,
+    count: total,
+    total,
+    current_page,
+    last_page,
+    per_page,
+    response: resBody,
+  };
 }

@@ -11,6 +11,7 @@ function FraudTable({
   onView,
   onApprove,
   onBlock,
+  processingId = null,
 }) {
   const formatPrice = (value) => {
     const num = Number(value);
@@ -73,6 +74,8 @@ function FraudTable({
                   onView={onView}
                   onApprove={onApprove}
                   onBlock={onBlock}
+                  disabled={processingId !== null}
+                  loading={processingId === row.id}
                 />
               </td>
             </tr>
